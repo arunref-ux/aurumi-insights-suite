@@ -12,3 +12,5 @@ export {
   dashboardKeys,
 } from "./hooks/use-dashboard";
 export { executiveDashboard, dashboardCatalog } from "./mock/executiveDashboard";
+export * from "./widgets";
+
