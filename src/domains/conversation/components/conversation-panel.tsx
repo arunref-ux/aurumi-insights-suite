@@ -355,6 +355,7 @@ export function ConversationPanel({
           messages={messages}
           isThinking={isThinking}
           emptyState={emptyState}
+          onOpenReference={onOpenReference}
         />
       </ScrollArea>
       {messages.length > 0 ? (
