@@ -287,3 +287,36 @@ export const eccBusinessHealth: StatusGridWidgetData = {
     },
   ],
 };
+
+// ─── Focus Today ─────────────────────────────────────────────────────────
+import type { FocusTodayWidgetData } from "../widgets/focus-today/types";
+
+export const eccFocusToday: FocusTodayWidgetData = {
+  items: [
+    {
+      id: "f1",
+      label: "Review pending approvals",
+      detail: "14 approvals awaiting your decision in ACTIONS.",
+      priority: { text: "High", status: "negative" },
+    },
+    {
+      id: "f2",
+      label: "Contact Hyderabad sales team",
+      detail: "Branch exceeded target by 12% — reinforce and share playbook.",
+      priority: { text: "Medium", status: "warning" },
+    },
+    {
+      id: "f3",
+      label: "Follow up on delayed purchase",
+      detail: "PO-4832 to Fabrikam Logistics is 3 days past ETA.",
+      priority: { text: "Medium", status: "warning" },
+    },
+    {
+      id: "f4",
+      label: "Review hiring pipeline",
+      detail: "6 senior roles enter final loop this week.",
+      priority: { text: "Normal", status: "info" },
+    },
+  ],
+  footnote: "Suggested focus based on today's signals.",
+};
