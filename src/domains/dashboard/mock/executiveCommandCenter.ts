@@ -10,6 +10,12 @@ export const executiveCommandCenter: Dashboard = {
     version: "1.0.0",
     tags: ["executive", "command-center", "overview"],
     updatedAt: new Date().toISOString(),
+    category: "executive",
+    icon: "LayoutDashboard",
+    defaultRole: "executive",
+    order: 1,
+    description:
+      "The reference executive dashboard: leading indicators, operational signals, and AI-generated summary for daily leadership use.",
   },
   sections: [
     {
