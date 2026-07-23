@@ -107,6 +107,16 @@ const SDK_WIDGETS: SdkEntry[] = [
     },
     component: PendingActionsWidget as unknown as WidgetComponent,
   },
+  {
+    definition: {
+      type: "focusToday",
+      displayName: "Focus Today",
+      description: "Executive to-do list for the day.",
+      category: "list",
+      defaultSize: "md",
+    },
+    component: FocusTodayWidget as unknown as WidgetComponent,
+  },
 ];
 
 let registered = false;
