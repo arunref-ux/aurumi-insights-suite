@@ -144,6 +144,32 @@ function buildReply(q: string, original: string): ConversationMessage {
     };
   }
 
+  if (q.includes("branch")) {
+    return {
+      ...base,
+      text:
+        "Hyderabad is exceeding target by 12%. Chennai is 4 points behind plan on mid-market and worth a check-in.",
+      cards: [
+        { kind: "businessHealth", title: "Regional health", data: eccBusinessHealth },
+      ],
+      references: [{ label: "Business Health", widgetId: "w-business-health" }],
+    };
+  }
+
+  if (q.includes("focus")) {
+    return {
+      ...base,
+      text: "Here's a suggested focus list for today based on current signals.",
+      cards: [
+        { kind: "pendingActions", title: "What needs a decision", data: eccPendingActions },
+      ],
+      references: [
+        { label: "Focus Today", widgetId: "w-focus-today" },
+        { label: "Pending Actions", widgetId: "w-pending-actions" },
+      ],
+    };
+  }
+
   return {
     ...base,
     text: `I don't have a prepared answer for "${original.trim()}" yet. In the meantime, here is where your business stands.`,
