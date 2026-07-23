@@ -114,8 +114,10 @@ function formatTimestamp(iso: string): string {
 
 export function ConversationMessageView({
   message,
+  onOpenReference,
 }: {
   message: ConversationMessage;
+  onOpenReference?: (widgetId: string, label: string) => void;
 }) {
   const isUser = message.role === "user";
   return (
@@ -143,15 +145,26 @@ export function ConversationMessageView({
       ) : null}
 
       {!isUser && message.references && message.references.length > 0 ? (
-        <p className="text-xs text-muted-foreground">
-          Related on the dashboard:{" "}
-          {message.references.map((r, i) => (
-            <span key={r.label}>
-              <span className="font-medium text-foreground/80">{r.label}</span>
-              {i < message.references!.length - 1 ? ", " : ""}
-            </span>
-          ))}
-        </p>
+        <div className="flex w-full flex-col gap-1.5">
+          <p className="text-xs text-muted-foreground">Related on the dashboard</p>
+          <div className="flex flex-wrap gap-1.5">
+            {message.references.map((r) => (
+              <Button
+                key={r.label}
+                type="button"
+                size="sm"
+                variant="outline"
+                className="h-7 gap-1 rounded-full px-2.5 text-xs"
+                disabled={!r.widgetId || !onOpenReference}
+                onClick={() =>
+                  r.widgetId && onOpenReference?.(r.widgetId, r.label)
+                }
+              >
+                View {r.label}
+              </Button>
+            ))}
+          </div>
+        </div>
       ) : null}
 
       <span className="text-[10px] uppercase tracking-wide text-muted-foreground">
