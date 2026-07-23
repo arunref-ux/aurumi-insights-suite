@@ -6,17 +6,20 @@ import { Skeleton } from "@/components/ui/skeleton";
 export const Route = createFileRoute("/_app/dashboard")({
   head: () => ({
     meta: [
-      { title: "Dashboard — Aurumi Business Insights" },
+      { title: "Executive Command Center — Aurumi Business Insights" },
       {
         name: "description",
         content:
-          "Configuration-driven executive dashboard powered by the Aurumi dashboard engine.",
+          "A configuration-driven executive command center giving leaders an at-a-glance view of revenue, pipeline, operations, and AI-generated insights.",
       },
-      { property: "og:title", content: "Dashboard — Aurumi Business Insights" },
+      {
+        property: "og:title",
+        content: "Executive Command Center — Aurumi Business Insights",
+      },
       {
         property: "og:description",
         content:
-          "Configuration-driven executive dashboard powered by the Aurumi dashboard engine.",
+          "At-a-glance business health across revenue, pipeline, operations, and AI insights — powered by the Aurumi dashboard engine.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -26,7 +29,7 @@ export const Route = createFileRoute("/_app/dashboard")({
 });
 
 function DashboardPage() {
-  const { data, isLoading, error } = useDefaultDashboard();
+  const { data, isLoading, error, refetch, isFetching } = useDefaultDashboard();
 
   if (isLoading) {
     return (
@@ -34,8 +37,8 @@ function DashboardPage() {
         <Skeleton className="h-8 w-64" />
         <Skeleton className="h-4 w-96" />
         <div className="grid grid-cols-12 gap-4">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <Skeleton key={i} className="col-span-12 h-40 sm:col-span-6 lg:col-span-3" />
+          {Array.from({ length: 6 }).map((_, i) => (
+            <Skeleton key={i} className="col-span-12 h-32 sm:col-span-6 lg:col-span-4" />
           ))}
         </div>
       </div>
@@ -56,5 +59,23 @@ function DashboardPage() {
     );
   }
 
-  return <DashboardRenderer dashboard={data} />;
+  return (
+    <DashboardRenderer
+      dashboard={data}
+      lastRefreshed={
+        typeof data.metadata?.updatedAt === "string"
+          ? data.metadata.updatedAt
+          : new Date().toISOString()
+      }
+      onRefresh={() => {
+        if (!isFetching) void refetch();
+      }}
+      onExport={() => {
+        /* Export is a platform-owned capability; placeholder for now. */
+      }}
+      onFilter={() => {
+        /* Global filters are a platform-owned capability; placeholder for now. */
+      }}
+    />
+  );
 }
