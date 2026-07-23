@@ -179,12 +179,16 @@ export interface ConversationHistoryProps {
   messages: ConversationMessage[];
   isThinking?: boolean;
   emptyState?: React.ReactNode;
+  onOpenReference?: (widgetId: string, label: string) => void;
 }
 
 export const ConversationHistory = forwardRef<
   HTMLDivElement,
   ConversationHistoryProps
->(function ConversationHistory({ messages, isThinking, emptyState }, ref) {
+>(function ConversationHistory(
+  { messages, isThinking, emptyState, onOpenReference },
+  ref,
+) {
   const endRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -198,7 +202,11 @@ export const ConversationHistory = forwardRef<
   return (
     <div ref={ref} className="flex flex-col gap-6 px-5 py-5">
       {messages.map((m) => (
-        <ConversationMessageView key={m.id} message={m} />
+        <ConversationMessageView
+          key={m.id}
+          message={m}
+          onOpenReference={onOpenReference}
+        />
       ))}
       {isThinking ? (
         <div
@@ -274,13 +282,25 @@ export function ConversationInput({
 export interface ConversationPanelProps {
   onClose?: () => void;
   className?: string;
+  /** Overrides the default suggestion list with context-aware prompts. */
+  suggestions?: ConversationSuggestion[];
+  /** Called when the user clicks a "View X" reference button. */
+  onOpenReference?: (widgetId: string, label: string) => void;
 }
 
-export function ConversationPanel({ onClose, className }: ConversationPanelProps) {
+export function ConversationPanel({
+  onClose,
+  className,
+  suggestions: suggestionsProp,
+  onOpenReference,
+}: ConversationPanelProps) {
   const [messages, setMessages] = useState<ConversationMessage[]>([]);
   const [draft, setDraft] = useState("");
   const [isThinking, setIsThinking] = useState(false);
-  const suggestions = useMemo(() => DEFAULT_SUGGESTIONS, []);
+  const suggestions = useMemo(
+    () => suggestionsProp ?? DEFAULT_SUGGESTIONS,
+    [suggestionsProp],
+  );
 
   const send = useCallback(
     async (prompt: string) => {
