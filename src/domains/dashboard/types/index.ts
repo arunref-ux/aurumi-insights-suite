@@ -41,6 +41,7 @@ export interface WidgetProps<TConfig = Record<string, unknown>, TData = unknown>
   data?: TData;
   isLoading?: boolean;
   error?: Error | null;
+  headerActions?: ReactNode;
 }
 
 export interface DashboardWidget<TConfig = Record<string, unknown>> {
