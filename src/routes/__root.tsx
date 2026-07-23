@@ -87,10 +87,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:title", content: "Aurumi Business Insights" },
       {
         property: "og:description",
-        content: "The analytics workspace of the Aurumi Business Operating System.",
+        content: "Aurumi Business Insights — the analytics workspace of the Aurumi Business Operating System.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Aurumi Business Insights" },
+      { name: "twitter:description", content: "Aurumi Business Insights — the analytics workspace of the Aurumi Business Operating System." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/a18cd1c9-49d8-4a82-a5bf-c8576ce19fe7/id-preview-857d1497--cc8389cb-fb93-4098-8877-cd79061cfb7d.lovable.app-1784807423502.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/a18cd1c9-49d8-4a82-a5bf-c8576ce19fe7/id-preview-857d1497--cc8389cb-fb93-4098-8877-cd79061cfb7d.lovable.app-1784807423502.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
