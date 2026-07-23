@@ -85,6 +85,16 @@ export interface DashboardMetadata {
   version?: string;
   tags?: readonly string[];
   updatedAt?: string;
+  /** Grouping category (e.g. "executive", "finance", "operations"). */
+  category?: string;
+  /** Lucide icon name used by navigation surfaces. */
+  icon?: string;
+  /** Role that sees this dashboard by default. */
+  defaultRole?: string;
+  /** Sort order within a category. */
+  order?: number;
+  /** Longer-form description separate from the top-level `Dashboard.description`. */
+  description?: string;
   [key: string]: unknown;
 }
 
