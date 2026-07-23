@@ -7,6 +7,8 @@ import type {
 } from "../types";
 import { widgetRegistry } from "../registry/widget-registry";
 import { registerDefaultWidgets } from "../registry/register-defaults";
+import { registerSdkWidgets } from "../widgets/register";
+import { resolveMockData } from "../mock/data-resolver";
 import { getWidgetColSpan } from "../layouts/grid";
 
 export interface DashboardRendererProps {
@@ -14,7 +16,10 @@ export interface DashboardRendererProps {
 }
 
 export function DashboardRenderer({ dashboard }: DashboardRendererProps) {
-  useMemo(() => registerDefaultWidgets(), []);
+  useMemo(() => {
+    registerDefaultWidgets();
+    registerSdkWidgets();
+  }, []);
 
   return (
     <div className="mx-auto flex w-full max-w-[1600px] flex-col gap-8 p-4 sm:p-6 lg:p-8">
@@ -73,9 +78,10 @@ function RowRenderer({ row }: { row: DashboardRow }) {
 
 function WidgetSlot({ widget }: { widget: DashboardWidget }) {
   const Component = widgetRegistry.resolve(widget.type);
+  const data = resolveMockData(widget.dataSource);
   return (
     <div className={getWidgetColSpan(widget.size)}>
-      <Component widget={widget} />
+      <Component widget={widget} data={data} />
     </div>
   );
 }
