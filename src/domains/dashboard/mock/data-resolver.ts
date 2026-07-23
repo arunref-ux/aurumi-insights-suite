@@ -21,6 +21,7 @@ import {
   eccPendingActions,
   eccPipelineTable,
   eccProgressRevenue,
+  eccFocusToday,
 } from "./ecc-widget-data";
 
 /**
@@ -51,6 +52,7 @@ const REGISTRY: Record<string, unknown> = {
   "mock:ecc.timeline.activity": eccActivityTimeline,
   "mock:ecc.actions.pending": eccPendingActions,
   "mock:ecc.status.health": eccBusinessHealth,
+  "mock:ecc.focus.today": eccFocusToday,
 };
 
 export function resolveMockData(dataSource: string | undefined): unknown {

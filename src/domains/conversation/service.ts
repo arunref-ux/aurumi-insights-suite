@@ -14,12 +14,12 @@ import type {
 } from "./types";
 
 export const DEFAULT_SUGGESTIONS: ConversationSuggestion[] = [
-  { id: "s1", prompt: "How is my business today?" },
-  { id: "s2", prompt: "What needs my attention?" },
-  { id: "s3", prompt: "Why did revenue change?" },
-  { id: "s4", prompt: "Show pending approvals." },
-  { id: "s5", prompt: "Summarize yesterday." },
-  { id: "s6", prompt: "Which teams are behind target?" },
+  { id: "s1", prompt: "Why did revenue increase?" },
+  { id: "s2", prompt: "Which branch needs attention?" },
+  { id: "s3", prompt: "Show overdue approvals." },
+  { id: "s4", prompt: "Summarize yesterday." },
+  { id: "s5", prompt: "Which teams are behind target?" },
+  { id: "s6", prompt: "What should I focus on today?" },
 ];
 
 function nowIso() {
@@ -141,6 +141,32 @@ function buildReply(q: string, original: string): ConversationMessage {
         { kind: "businessHealth", title: "Business health by area", data: eccBusinessHealth },
       ],
       references: [{ label: "Business Health", widgetId: "w-business-health" }],
+    };
+  }
+
+  if (q.includes("branch")) {
+    return {
+      ...base,
+      text:
+        "Hyderabad is exceeding target by 12%. Chennai is 4 points behind plan on mid-market and worth a check-in.",
+      cards: [
+        { kind: "businessHealth", title: "Regional health", data: eccBusinessHealth },
+      ],
+      references: [{ label: "Business Health", widgetId: "w-business-health" }],
+    };
+  }
+
+  if (q.includes("focus")) {
+    return {
+      ...base,
+      text: "Here's a suggested focus list for today based on current signals.",
+      cards: [
+        { kind: "pendingActions", title: "What needs a decision", data: eccPendingActions },
+      ],
+      references: [
+        { label: "Focus Today", widgetId: "w-focus-today" },
+        { label: "Pending Actions", widgetId: "w-pending-actions" },
+      ],
     };
   }
 

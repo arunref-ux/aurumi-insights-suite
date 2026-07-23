@@ -9,6 +9,7 @@ import { AiSummaryWidget } from "./ai-summary/ai-summary-widget";
 import { TimelineWidget } from "./timeline/timeline-widget";
 import { StatusGridWidget } from "./status-grid/status-grid-widget";
 import { PendingActionsWidget } from "./pending-actions/pending-actions-widget";
+import { FocusTodayWidget } from "./focus-today/focus-today-widget";
 
 interface SdkEntry {
   definition: WidgetDefinition;
@@ -105,6 +106,16 @@ const SDK_WIDGETS: SdkEntry[] = [
       defaultSize: "lg",
     },
     component: PendingActionsWidget as unknown as WidgetComponent,
+  },
+  {
+    definition: {
+      type: "focusToday",
+      displayName: "Focus Today",
+      description: "Executive to-do list for the day.",
+      category: "list",
+      defaultSize: "md",
+    },
+    component: FocusTodayWidget as unknown as WidgetComponent,
   },
 ];
 

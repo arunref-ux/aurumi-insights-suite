@@ -114,8 +114,10 @@ function formatTimestamp(iso: string): string {
 
 export function ConversationMessageView({
   message,
+  onOpenReference,
 }: {
   message: ConversationMessage;
+  onOpenReference?: (widgetId: string, label: string) => void;
 }) {
   const isUser = message.role === "user";
   return (
@@ -143,15 +145,26 @@ export function ConversationMessageView({
       ) : null}
 
       {!isUser && message.references && message.references.length > 0 ? (
-        <p className="text-xs text-muted-foreground">
-          Related on the dashboard:{" "}
-          {message.references.map((r, i) => (
-            <span key={r.label}>
-              <span className="font-medium text-foreground/80">{r.label}</span>
-              {i < message.references!.length - 1 ? ", " : ""}
-            </span>
-          ))}
-        </p>
+        <div className="flex w-full flex-col gap-1.5">
+          <p className="text-xs text-muted-foreground">Related on the dashboard</p>
+          <div className="flex flex-wrap gap-1.5">
+            {message.references.map((r) => (
+              <Button
+                key={r.label}
+                type="button"
+                size="sm"
+                variant="outline"
+                className="h-7 gap-1 rounded-full px-2.5 text-xs"
+                disabled={!r.widgetId || !onOpenReference}
+                onClick={() =>
+                  r.widgetId && onOpenReference?.(r.widgetId, r.label)
+                }
+              >
+                View {r.label}
+              </Button>
+            ))}
+          </div>
+        </div>
       ) : null}
 
       <span className="text-[10px] uppercase tracking-wide text-muted-foreground">
@@ -166,12 +179,16 @@ export interface ConversationHistoryProps {
   messages: ConversationMessage[];
   isThinking?: boolean;
   emptyState?: React.ReactNode;
+  onOpenReference?: (widgetId: string, label: string) => void;
 }
 
 export const ConversationHistory = forwardRef<
   HTMLDivElement,
   ConversationHistoryProps
->(function ConversationHistory({ messages, isThinking, emptyState }, ref) {
+>(function ConversationHistory(
+  { messages, isThinking, emptyState, onOpenReference },
+  ref,
+) {
   const endRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -185,7 +202,11 @@ export const ConversationHistory = forwardRef<
   return (
     <div ref={ref} className="flex flex-col gap-6 px-5 py-5">
       {messages.map((m) => (
-        <ConversationMessageView key={m.id} message={m} />
+        <ConversationMessageView
+          key={m.id}
+          message={m}
+          onOpenReference={onOpenReference}
+        />
       ))}
       {isThinking ? (
         <div
@@ -261,13 +282,25 @@ export function ConversationInput({
 export interface ConversationPanelProps {
   onClose?: () => void;
   className?: string;
+  /** Overrides the default suggestion list with context-aware prompts. */
+  suggestions?: ConversationSuggestion[];
+  /** Called when the user clicks a "View X" reference button. */
+  onOpenReference?: (widgetId: string, label: string) => void;
 }
 
-export function ConversationPanel({ onClose, className }: ConversationPanelProps) {
+export function ConversationPanel({
+  onClose,
+  className,
+  suggestions: suggestionsProp,
+  onOpenReference,
+}: ConversationPanelProps) {
   const [messages, setMessages] = useState<ConversationMessage[]>([]);
   const [draft, setDraft] = useState("");
   const [isThinking, setIsThinking] = useState(false);
-  const suggestions = useMemo(() => DEFAULT_SUGGESTIONS, []);
+  const suggestions = useMemo(
+    () => suggestionsProp ?? DEFAULT_SUGGESTIONS,
+    [suggestionsProp],
+  );
 
   const send = useCallback(
     async (prompt: string) => {
@@ -322,6 +355,7 @@ export function ConversationPanel({ onClose, className }: ConversationPanelProps
           messages={messages}
           isThinking={isThinking}
           emptyState={emptyState}
+          onOpenReference={onOpenReference}
         />
       </ScrollArea>
       {messages.length > 0 ? (
