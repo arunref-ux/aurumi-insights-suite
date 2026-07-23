@@ -14,12 +14,12 @@ import type {
 } from "./types";
 
 export const DEFAULT_SUGGESTIONS: ConversationSuggestion[] = [
-  { id: "s1", prompt: "How is my business today?" },
-  { id: "s2", prompt: "What needs my attention?" },
-  { id: "s3", prompt: "Why did revenue change?" },
-  { id: "s4", prompt: "Show pending approvals." },
-  { id: "s5", prompt: "Summarize yesterday." },
-  { id: "s6", prompt: "Which teams are behind target?" },
+  { id: "s1", prompt: "Why did revenue increase?" },
+  { id: "s2", prompt: "Which branch needs attention?" },
+  { id: "s3", prompt: "Show overdue approvals." },
+  { id: "s4", prompt: "Summarize yesterday." },
+  { id: "s5", prompt: "Which teams are behind target?" },
+  { id: "s6", prompt: "What should I focus on today?" },
 ];
 
 function nowIso() {
