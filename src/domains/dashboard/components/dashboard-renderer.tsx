@@ -10,29 +10,54 @@ import { registerDefaultWidgets } from "../registry/register-defaults";
 import { registerSdkWidgets } from "../widgets/register";
 import { resolveMockData } from "../mock/data-resolver";
 import { getWidgetColSpan } from "../layouts/grid";
+import { WidgetActionMenu } from "../widgets/shared/widget-action-menu";
+import { DashboardToolbar } from "./dashboard-toolbar";
 
 export interface DashboardRendererProps {
   dashboard: Dashboard;
+  /**
+   * When true (default), renders the reusable DashboardToolbar above the sections.
+   * Set to false when the host page provides its own toolbar.
+   */
+  showToolbar?: boolean;
+  /** Optional override for the last-refreshed timestamp shown in the toolbar. */
+  lastRefreshed?: string;
+  onRefresh?: () => void;
+  onExport?: () => void;
+  onFilter?: () => void;
 }
 
-export function DashboardRenderer({ dashboard }: DashboardRendererProps) {
+export function DashboardRenderer({
+  dashboard,
+  showToolbar = true,
+  lastRefreshed,
+  onRefresh,
+  onExport,
+  onFilter,
+}: DashboardRendererProps) {
   useMemo(() => {
     registerDefaultWidgets();
     registerSdkWidgets();
   }, []);
 
+  const refreshedAt =
+    lastRefreshed ??
+    (typeof dashboard.metadata?.updatedAt === "string"
+      ? dashboard.metadata.updatedAt
+      : new Date().toISOString());
+
   return (
     <div className="mx-auto flex w-full max-w-[1600px] flex-col gap-8 p-4 sm:p-6 lg:p-8">
-      <header className="flex flex-col gap-1">
-        <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-          {dashboard.title}
-        </h1>
-        {dashboard.description ? (
-          <p className="max-w-3xl text-sm text-muted-foreground">
-            {dashboard.description}
-          </p>
-        ) : null}
-      </header>
+      {showToolbar ? (
+        <DashboardToolbar
+          title={dashboard.title}
+          subtitle={dashboard.description}
+          lastRefreshed={refreshedAt}
+          onRefresh={onRefresh}
+          onExport={onExport}
+          onFilter={onFilter}
+        />
+      ) : null}
 
       <div className="flex flex-col gap-10">
         {dashboard.sections.map((section) => (
@@ -81,7 +106,11 @@ function WidgetSlot({ widget }: { widget: DashboardWidget }) {
   const data = resolveMockData(widget.dataSource);
   return (
     <div className={getWidgetColSpan(widget.size)}>
-      <Component widget={widget} data={data} />
+      <Component
+        widget={widget}
+        data={data}
+        headerActions={<WidgetActionMenu widgetTitle={widget.title} />}
+      />
     </div>
   );
 }

@@ -6,6 +6,9 @@ import { ListWidget } from "./list/list-widget";
 import { ProgressWidget } from "./progress/progress-widget";
 import { TableWidget } from "./table/table-widget";
 import { AiSummaryWidget } from "./ai-summary/ai-summary-widget";
+import { TimelineWidget } from "./timeline/timeline-widget";
+import { StatusGridWidget } from "./status-grid/status-grid-widget";
+import { PendingActionsWidget } from "./pending-actions/pending-actions-widget";
 
 interface SdkEntry {
   definition: WidgetDefinition;
@@ -72,6 +75,36 @@ const SDK_WIDGETS: SdkEntry[] = [
       defaultSize: "full",
     },
     component: AiSummaryWidget as unknown as WidgetComponent,
+  },
+  {
+    definition: {
+      type: "timeline",
+      displayName: "Timeline",
+      description: "Chronological feed of business activity events.",
+      category: "list",
+      defaultSize: "lg",
+    },
+    component: TimelineWidget as unknown as WidgetComponent,
+  },
+  {
+    definition: {
+      type: "statusGrid",
+      displayName: "Status Grid",
+      description: "Grid of business areas with a health status per item.",
+      category: "other",
+      defaultSize: "full",
+    },
+    component: StatusGridWidget as unknown as WidgetComponent,
+  },
+  {
+    definition: {
+      type: "pendingActions",
+      displayName: "Pending Actions",
+      description: "Read-only summary of pending approvals and escalations.",
+      category: "list",
+      defaultSize: "lg",
+    },
+    component: PendingActionsWidget as unknown as WidgetComponent,
   },
 ];
 

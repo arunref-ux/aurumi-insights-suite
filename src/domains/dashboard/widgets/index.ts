@@ -5,4 +5,8 @@ export * from "./list";
 export * from "./progress";
 export * from "./table";
 export * from "./ai-summary";
+export * from "./timeline";
+export * from "./status-grid";
+export * from "./pending-actions";
 export { registerSdkWidgets } from "./register";
+export { WidgetActionMenu } from "./shared/widget-action-menu";
