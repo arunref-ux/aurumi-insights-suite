@@ -49,6 +49,7 @@ export function TopBar() {
       </Breadcrumb>
 
       <div className="ml-auto flex items-center gap-2">
+        <RoleSwitcher />
         <div className="relative hidden sm:block">
           <Search className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
@@ -65,8 +66,8 @@ export function TopBar() {
           <Bell className="h-4 w-4" />
         </Button>
         <ThemeToggle />
-        <Avatar className="h-8 w-8">
-          <AvatarFallback className="text-xs font-medium">AU</AvatarFallback>
+        <Avatar className="h-8 w-8" title={`${currentEmployee.name} · ${currentEmployee.designation}`}>
+          <AvatarFallback className="text-xs font-medium">{initials}</AvatarFallback>
         </Avatar>
       </div>
     </header>
