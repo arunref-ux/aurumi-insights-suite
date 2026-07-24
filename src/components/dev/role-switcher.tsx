@@ -65,34 +65,6 @@ export function RoleSwitcher() {
           aria-hidden="true"
         />
       </div>
-      {/*
-      <Select
-        value={currentEmployee.id}
-        onValueChange={setCurrentEmployeeId}
-      >
-        <SelectTrigger
-          className="h-8 w-[220px] text-xs"
-          aria-label="Preview as employee"
-        >
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent align="end">
-          <SelectGroup>
-            <SelectLabel className="text-[10px] uppercase tracking-wider text-muted-foreground">
-              Development personas
-            </SelectLabel>
-            {availableEmployees.map((emp) => (
-              <SelectItem key={emp.id} value={emp.id} className="text-xs">
-                <span className="font-medium">{emp.designation}</span>
-                <span className="ml-1.5 text-muted-foreground">
-                  · {emp.name}
-                </span>
-              </SelectItem>
-            ))}
-          </SelectGroup>
-        </SelectContent>
-      </Select>
-      */}
     </div>
   );
 }
