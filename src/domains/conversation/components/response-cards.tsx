@@ -1,8 +1,5 @@
 import type { ReactNode } from "react";
 import { widgetRegistry } from "@/domains/dashboard/registry/widget-registry";
-import { bootstrapWidgetRegistry } from "@/domains/dashboard/registry/bootstrap";
-
-bootstrapWidgetRegistry();
 import type { DashboardWidget } from "@/domains/dashboard/types";
 import type { ConversationCard } from "../types";
 
