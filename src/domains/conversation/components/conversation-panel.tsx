@@ -291,12 +291,28 @@ export function ConversationPanel({
   suggestions: suggestionsProp,
   onOpenReference,
 }: ConversationPanelProps) {
+  const conversation = useConversationProvider();
   const [messages, setMessages] = useState<ConversationMessage[]>([]);
   const [draft, setDraft] = useState("");
   const [isThinking, setIsThinking] = useState(false);
+  const [defaultSuggestions, setDefaultSuggestions] = useState<
+    ConversationSuggestion[]
+  >([]);
+
+  useEffect(() => {
+    if (suggestionsProp) return;
+    let cancelled = false;
+    void conversation.suggestions().then((s) => {
+      if (!cancelled) setDefaultSuggestions(s);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [conversation, suggestionsProp]);
+
   const suggestions = useMemo(
-    () => suggestionsProp ?? DEFAULT_SUGGESTIONS,
-    [suggestionsProp],
+    () => suggestionsProp ?? defaultSuggestions,
+    [suggestionsProp, defaultSuggestions],
   );
 
   const send = useCallback(
@@ -307,13 +323,13 @@ export function ConversationPanel({
       setMessages((prev) => [...prev, makeUserMessage(text)]);
       setIsThinking(true);
       try {
-        const reply = await ConversationService.ask(text);
+        const reply = await conversation.ask(text);
         setMessages((prev) => [...prev, reply]);
       } finally {
         setIsThinking(false);
       }
     },
-    [],
+    [conversation],
   );
 
   const emptyState = (
