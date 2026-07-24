@@ -1,12 +1,10 @@
 import { Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { WidgetCard } from "./widget-card";
-import { widgetRegistry } from "../registry/widget-registry";
 import type { WidgetProps } from "../types";
 
 export function PlaceholderWidget({ widget }: WidgetProps) {
-  const definition = widgetRegistry.get(widget.type)?.definition;
-  const displayType = definition?.displayName ?? widget.type;
+  const displayType = widget.type;
 
   return (
     <WidgetCard
@@ -33,8 +31,8 @@ export function PlaceholderWidget({ widget }: WidgetProps) {
         </div>
 
         <p className="text-sm text-muted-foreground">
-          {definition?.description ??
-            "This widget is registered in the dashboard engine and will be implemented in a future release."}
+          This widget is registered in the dashboard engine and will be implemented
+          in a future release.
         </p>
 
         <div className="mt-auto w-full rounded-md border border-dashed border-border/70 bg-muted/40 p-4 text-center text-xs text-muted-foreground">
