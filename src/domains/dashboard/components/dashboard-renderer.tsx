@@ -5,7 +5,9 @@ import type {
   DashboardWidget,
 } from "../types";
 import { widgetRegistry } from "../registry/widget-registry";
-import "../registry/bootstrap";
+import { bootstrapWidgetRegistry } from "../registry/bootstrap";
+
+bootstrapWidgetRegistry();
 import { useWidgetData } from "../hooks/use-widget-data";
 import { getWidgetColSpan } from "../layouts/grid";
 import { WidgetActionMenu } from "../widgets/shared/widget-action-menu";
