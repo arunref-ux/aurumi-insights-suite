@@ -72,7 +72,9 @@ const FOCUS_WIDGET: DashboardWidget<FocusTodayWidgetConfig> = {
   title: "Focus Today",
   subtitle: "Suggested priorities for the day",
   size: "md",
+  dataSource: "mock:ecc.focus.today",
 };
+
 
 function DashboardPage() {
   const { data, isLoading, error, refetch, isFetching } = useDefaultDashboard();
@@ -134,8 +136,6 @@ function DashboardPage() {
           onRefresh={() => {
             if (!isFetching) void refetch();
           }}
-          onExport={() => {}}
-          onFilter={() => {}}
           secondaryActions={
             <Button
               size="sm"
@@ -223,13 +223,10 @@ function DashboardPage() {
           </div>
           <div className="grid grid-cols-12 gap-4">
             <div className="col-span-12 lg:col-span-6">
-              <FocusTodayWidget
-                widget={FOCUS_WIDGET}
-                data={eccFocusToday}
-                headerActions={<WidgetActionMenu widgetTitle={FOCUS_WIDGET.title} />}
-              />
+              <RenderWidget widget={FOCUS_WIDGET} />
             </div>
           </div>
+
         </section>
 
         {/* ─── 5. Executive Dashboard (KPIs, overview, operations) ───── */}
