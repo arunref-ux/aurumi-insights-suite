@@ -19,6 +19,26 @@ export const executiveCommandCenter: Dashboard = {
   },
   sections: [
     {
+      id: "sec-focus",
+      title: "What to focus on",
+      description: "A concise list to anchor your day.",
+      rows: [
+        {
+          id: "row-focus",
+          widgets: [
+            {
+              id: "w-focus-today",
+              type: "focusToday",
+              title: "Focus Today",
+              subtitle: "Suggested priorities for the day",
+              size: "lg",
+              dataSource: "mock:ecc.focus.today",
+            },
+          ],
+        },
+      ],
+    },
+    {
       id: "sec-kpis",
       title: "Business at a glance",
       description: "Six leading indicators across revenue, people, and operations.",
