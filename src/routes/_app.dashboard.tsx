@@ -210,27 +210,9 @@ function DashboardPage() {
           </ul>
         </section>
 
-        {/* ─── 4. Focus Today ────────────────────────────────────────── */}
-        <section aria-label="Focus today" className="flex flex-col gap-4">
-          <div>
-            <h2 className="text-lg font-semibold tracking-tight">
-              What to focus on
-            </h2>
-            <p className="text-sm text-muted-foreground">
-              A concise list to anchor your day.
-            </p>
-          </div>
-          <div className="grid grid-cols-12 gap-4">
-            <div className="col-span-12 lg:col-span-6">
-              <RenderWidget widget={FOCUS_WIDGET as DashboardWidget} />
-            </div>
-          </div>
-
-
-        </section>
-
-        {/* ─── 5. Executive Dashboard (KPIs, overview, operations) ───── */}
+        {/* ─── 4. Executive Dashboard (Focus, KPIs, overview, operations) ─ */}
         <DashboardRenderer dashboard={data} showToolbar={false} />
+
       </div>
 
       {!open ? (
