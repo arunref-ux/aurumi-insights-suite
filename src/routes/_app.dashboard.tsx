@@ -1,10 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Building2, CalendarClock, FlaskConical, MessageSquare } from "lucide-react";
-import {
-  DashboardRenderer,
-  RenderWidget,
-} from "@/domains/dashboard/components/dashboard-renderer";
+import { DashboardRenderer } from "@/domains/dashboard/components/dashboard-renderer";
 import { DashboardToolbar } from "@/domains/dashboard/components/dashboard-toolbar";
 import { useDefaultDashboard } from "@/domains/dashboard/hooks/use-dashboard";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -20,19 +17,12 @@ import { ConversationPanel } from "@/domains/conversation";
 import type { ConversationSuggestion } from "@/domains/conversation/types";
 import { ExecutiveBrief } from "@/components/executive/executive-brief";
 import type { BriefHighlight } from "@/components/executive/executive-brief";
-import type { DashboardWidget } from "@/domains/dashboard/types";
-import type { FocusTodayWidgetConfig } from "@/domains/dashboard/widgets/focus-today/types";
 
-// ARCH NOTE (deferred, Milestone 6.2):
-// This route currently composes the Executive Workspace (brief, suggestions,
-// focus card, main dashboard, conversation drawer) directly in the page.
-// Workspace composition should eventually move behind a provider-owned
-// workspace definition (e.g. `WorkspaceProvider`) so pages render workspaces
-// declaratively, mirroring the dashboard/widget provider path. Intentionally
-// deferred until the Reports Runtime — do not refactor as part of 6.2.
-
-
-
+// Workspace composition (brief, suggestions, dashboard sections, conversation
+// drawer) is assembled here from the existing provider-owned dashboard
+// configuration. Widget-level composition (including Focus Today) lives in
+// the dashboard provider — this route no longer declares widgets or mock
+// data sources directly.
 
 export const Route = createFileRoute("/_app/dashboard")({
   head: () => ({
@@ -76,14 +66,6 @@ const BRIEF_HIGHLIGHTS: BriefHighlight[] = [
   { id: "h5", text: "CSAT improved to 4.6 / 5", tone: "positive" },
 ];
 
-const FOCUS_WIDGET: DashboardWidget<FocusTodayWidgetConfig> = {
-  id: "w-focus-today",
-  type: "focusToday",
-  title: "Focus Today",
-  subtitle: "Suggested priorities for the day",
-  size: "md",
-  dataSource: "mock:ecc.focus.today",
-};
 
 
 function DashboardPage() {
