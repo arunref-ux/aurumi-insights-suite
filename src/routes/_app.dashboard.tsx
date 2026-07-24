@@ -1,7 +1,10 @@
 import { useCallback, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Building2, CalendarClock, MessageSquare } from "lucide-react";
-import { DashboardRenderer } from "@/domains/dashboard/components/dashboard-renderer";
+import { Building2, CalendarClock, FlaskConical, MessageSquare } from "lucide-react";
+import {
+  DashboardRenderer,
+  RenderWidget,
+} from "@/domains/dashboard/components/dashboard-renderer";
 import { DashboardToolbar } from "@/domains/dashboard/components/dashboard-toolbar";
 import { useDefaultDashboard } from "@/domains/dashboard/hooks/use-dashboard";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -17,11 +20,9 @@ import { ConversationPanel } from "@/domains/conversation";
 import type { ConversationSuggestion } from "@/domains/conversation/types";
 import { ExecutiveBrief } from "@/components/executive/executive-brief";
 import type { BriefHighlight } from "@/components/executive/executive-brief";
-import { FocusTodayWidget } from "@/domains/dashboard/widgets/focus-today/focus-today-widget";
-import { eccFocusToday } from "@/domains/dashboard/mock/ecc-widget-data";
-import { WidgetActionMenu } from "@/domains/dashboard/widgets/shared/widget-action-menu";
 import type { DashboardWidget } from "@/domains/dashboard/types";
 import type { FocusTodayWidgetConfig } from "@/domains/dashboard/widgets/focus-today/types";
+
 
 export const Route = createFileRoute("/_app/dashboard")({
   head: () => ({
