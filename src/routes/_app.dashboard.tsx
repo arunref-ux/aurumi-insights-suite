@@ -23,6 +23,16 @@ import type { BriefHighlight } from "@/components/executive/executive-brief";
 import type { DashboardWidget } from "@/domains/dashboard/types";
 import type { FocusTodayWidgetConfig } from "@/domains/dashboard/widgets/focus-today/types";
 
+// ARCH NOTE (deferred, Milestone 6.2):
+// This route currently composes the Executive Workspace (brief, suggestions,
+// focus card, main dashboard, conversation drawer) directly in the page.
+// Workspace composition should eventually move behind a provider-owned
+// workspace definition (e.g. `WorkspaceProvider`) so pages render workspaces
+// declaratively, mirroring the dashboard/widget provider path. Intentionally
+// deferred until the Reports Runtime — do not refactor as part of 6.2.
+
+
+
 
 export const Route = createFileRoute("/_app/dashboard")({
   head: () => ({
