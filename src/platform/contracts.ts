@@ -12,7 +12,7 @@
  * network-backed providers later without shape changes.
  */
 
-import type { Dashboard } from "@/domains/dashboard/types";
+import type { Dashboard, DashboardWidget } from "@/domains/dashboard/types";
 import type {
   ConversationMessage,
   ConversationSuggestion,
@@ -34,6 +34,22 @@ export interface DashboardProvider {
   list(): Promise<DashboardListItem[]>;
   get(slug: string): Promise<Dashboard | null>;
   getDefault(): Promise<Dashboard | null>;
+}
+
+// ─── Widget data ────────────────────────────────────────────────────
+
+/**
+ * Resolves a widget instance to its rendered data payload. The Dashboard
+ * Engine calls this via the platform layer so the renderer itself remains
+ * data-source agnostic (mock, HTTP, streaming, cache — all live below).
+ *
+ * Kept synchronous for the current mock implementation to preserve the
+ * existing render pipeline. A future async variant can wrap this without
+ * changing consumers, since the `useWidgetData` hook already returns an
+ * envelope with `{ data, isLoading, error }`.
+ */
+export interface WidgetDataProvider {
+  resolve(widget: DashboardWidget): unknown;
 }
 
 // ─── Conversation ───────────────────────────────────────────────────
@@ -112,13 +128,16 @@ export interface NotificationProvider {
 // ─── Platform bundle ───────────────────────────────────────────────
 
 /**
- * Aggregate contract used by the future PlatformProvider wiring.
+ * Aggregate contract used by the PlatformProvider wiring.
  * Individual providers may be supplied independently during migration.
+ * Business pages consume this bundle via `usePlatform()`; mocks live in
+ * `src/platform/providers/mock` and can be swapped one at a time.
  */
 export interface PlatformProviders {
   dashboards: DashboardProvider;
+  widgetData: WidgetDataProvider;
   conversation: ConversationProvider;
-  actions: ActionsProvider;
-  workflows: WorkflowProvider;
-  notifications: NotificationProvider;
+  actions?: ActionsProvider;
+  workflows?: WorkflowProvider;
+  notifications?: NotificationProvider;
 }

@@ -1,165 +1,86 @@
-import { Activity, Inbox, LineChart, ShieldCheck, Sparkles } from "lucide-react";
-import { STATUS_TEXT } from "@/domains/dashboard/widgets/shared/status";
+import type { ReactNode } from "react";
+import { widgetRegistry } from "@/domains/dashboard/registry/widget-registry";
+import "@/domains/dashboard/registry/bootstrap";
+import type { DashboardWidget } from "@/domains/dashboard/types";
 import type { ConversationCard } from "../types";
 
-function CardShell({
+/**
+ * Renders a conversation response card by delegating to a Widget SDK
+ * component from the shared registry. The conversation module owns no
+ * widget presentation of its own — it simply wires card payloads into
+ * synthetic `DashboardWidget` instances so the SDK renders them inline.
+ */
+function InlineWidget({
+  type,
   title,
-  icon,
-  children,
+  subtitle,
+  data,
 }: {
+  type: string;
   title: string;
-  icon: React.ReactNode;
-  children: React.ReactNode;
-}) {
-  return (
-    <section className="rounded-lg border border-border/60 bg-card/60 p-4 shadow-sm">
-      <header className="mb-3 flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-        <span aria-hidden="true" className="text-foreground/70">
-          {icon}
-        </span>
-        {title}
-      </header>
-      {children}
-    </section>
-  );
+  subtitle?: string;
+  data: unknown;
+}): ReactNode {
+  const Component = widgetRegistry.resolve(type);
+  const widget: DashboardWidget = {
+    id: `conv-${type}-${title}`,
+    type,
+    title,
+    subtitle,
+  };
+  return <Component widget={widget} data={data} />;
 }
 
 export function ResponseCard({ card }: { card: ConversationCard }) {
   switch (card.kind) {
     case "executiveSummary":
       return (
-        <CardShell
+        <InlineWidget
+          type="aiSummary"
           title={card.title ?? "Executive summary"}
-          icon={<Sparkles className="h-3.5 w-3.5" />}
-        >
-          {card.data.summaryTitle ? (
-            <p className="mb-2 text-sm font-medium">{card.data.summaryTitle}</p>
-          ) : null}
-          <p className="text-sm leading-relaxed text-muted-foreground">
-            {card.data.insight}
-          </p>
-        </CardShell>
-      );
-
-    case "kpiSnapshot":
-      return (
-        <CardShell
-          title={card.title ?? "KPI snapshot"}
-          icon={<LineChart className="h-3.5 w-3.5" />}
-        >
-          <ul className="grid grid-cols-1 gap-2 sm:grid-cols-3">
-            {card.items.map((item) => {
-              const value = `${item.data.value ?? ""}${item.data.valueSuffix ?? ""}`;
-              const trend = "trend" in item.data ? item.data.trend : undefined;
-              return (
-                <li
-                  key={item.id}
-                  className="rounded-md border border-border/60 bg-muted/30 p-3"
-                >
-                  <p className="text-xs text-muted-foreground">{item.label}</p>
-                  <p
-                    className={`mt-1 text-lg font-semibold tabular-nums ${STATUS_TEXT[item.data.status ?? "neutral"]}`}
-                  >
-                    {value}
-                  </p>
-                  {trend ? (
-                    <p className="text-xs text-muted-foreground">
-                      {trend.direction === "up" ? "▲" : trend.direction === "down" ? "▼" : "▬"}{" "}
-                      {trend.percentage}% {trend.period}
-                    </p>
-                  ) : null}
-                </li>
-              );
-            })}
-          </ul>
-        </CardShell>
+          data={card.data}
+        />
       );
 
     case "pendingActions":
       return (
-        <CardShell
+        <InlineWidget
+          type="pendingActions"
           title={card.title ?? "Pending actions"}
-          icon={<Inbox className="h-3.5 w-3.5" />}
-        >
-          <ul className="grid grid-cols-1 gap-2 sm:grid-cols-3">
-            {card.data.metrics.map((m) => (
-              <li
-                key={m.id}
-                className="rounded-md border border-border/60 bg-muted/30 p-3"
-              >
-                <p className="text-xs text-muted-foreground">{m.label}</p>
-                <p
-                  className={`mt-1 text-xl font-semibold tabular-nums ${STATUS_TEXT[m.status ?? "neutral"]}`}
-                >
-                  {m.count}
-                </p>
-                {m.hint ? (
-                  <p className="text-xs text-muted-foreground">{m.hint}</p>
-                ) : null}
-              </li>
-            ))}
-          </ul>
-          {card.data.footnote ? (
-            <p className="mt-3 text-xs text-muted-foreground">
-              {card.data.footnote}
-            </p>
-          ) : null}
-        </CardShell>
+          data={card.data}
+        />
       );
 
     case "timeline":
       return (
-        <CardShell
-          title={card.title ?? "Timeline"}
-          icon={<Activity className="h-3.5 w-3.5" />}
-        >
-          <ol className="flex flex-col gap-3">
-            {card.data.items.slice(0, 5).map((i) => (
-              <li key={i.id} className="flex gap-3">
-                <span
-                  aria-hidden="true"
-                  className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${STATUS_TEXT[i.status ?? "neutral"]}`}
-                  style={{ backgroundColor: "currentColor" }}
-                />
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium">{i.title}</p>
-                  {i.description ? (
-                    <p className="text-xs text-muted-foreground">
-                      {i.description}
-                    </p>
-                  ) : null}
-                </div>
-              </li>
-            ))}
-          </ol>
-        </CardShell>
+        <InlineWidget
+          type="timeline"
+          title={card.title ?? "Recent activity"}
+          data={card.data}
+        />
       );
 
     case "businessHealth":
       return (
-        <CardShell
+        <InlineWidget
+          type="statusGrid"
           title={card.title ?? "Business health"}
-          icon={<ShieldCheck className="h-3.5 w-3.5" />}
-        >
-          <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-            {card.data.items.map((i) => (
-              <li
-                key={i.id}
-                className="flex flex-col gap-0.5 rounded-md border border-border/60 bg-muted/30 p-3"
-              >
-                <span className="text-sm font-medium">{i.label}</span>
-                <span className="text-xs capitalize text-muted-foreground">
-                  {i.status}
-                </span>
-                {i.message ? (
-                  <span className="text-xs text-muted-foreground">
-                    {i.message}
-                  </span>
-                ) : null}
-              </li>
-            ))}
-          </ul>
-        </CardShell>
+          data={card.data}
+        />
+      );
+
+    case "kpiSnapshot":
+      return (
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+          {card.items.map((item) => (
+            <InlineWidget
+              key={item.id}
+              type={item.trend ? "trendKpi" : "kpi"}
+              title={item.label}
+              data={item.data}
+            />
+          ))}
+        </div>
       );
 
     default:

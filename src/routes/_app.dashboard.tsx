@@ -1,7 +1,10 @@
 import { useCallback, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Building2, CalendarClock, MessageSquare } from "lucide-react";
-import { DashboardRenderer } from "@/domains/dashboard/components/dashboard-renderer";
+import { Building2, CalendarClock, FlaskConical, MessageSquare } from "lucide-react";
+import {
+  DashboardRenderer,
+  RenderWidget,
+} from "@/domains/dashboard/components/dashboard-renderer";
 import { DashboardToolbar } from "@/domains/dashboard/components/dashboard-toolbar";
 import { useDefaultDashboard } from "@/domains/dashboard/hooks/use-dashboard";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -17,11 +20,9 @@ import { ConversationPanel } from "@/domains/conversation";
 import type { ConversationSuggestion } from "@/domains/conversation/types";
 import { ExecutiveBrief } from "@/components/executive/executive-brief";
 import type { BriefHighlight } from "@/components/executive/executive-brief";
-import { FocusTodayWidget } from "@/domains/dashboard/widgets/focus-today/focus-today-widget";
-import { eccFocusToday } from "@/domains/dashboard/mock/ecc-widget-data";
-import { WidgetActionMenu } from "@/domains/dashboard/widgets/shared/widget-action-menu";
 import type { DashboardWidget } from "@/domains/dashboard/types";
 import type { FocusTodayWidgetConfig } from "@/domains/dashboard/widgets/focus-today/types";
+
 
 export const Route = createFileRoute("/_app/dashboard")({
   head: () => ({
@@ -71,7 +72,9 @@ const FOCUS_WIDGET: DashboardWidget<FocusTodayWidgetConfig> = {
   title: "Focus Today",
   subtitle: "Suggested priorities for the day",
   size: "md",
+  dataSource: "mock:ecc.focus.today",
 };
+
 
 function DashboardPage() {
   const { data, isLoading, error, refetch, isFetching } = useDefaultDashboard();
@@ -133,8 +136,6 @@ function DashboardPage() {
           onRefresh={() => {
             if (!isFetching) void refetch();
           }}
-          onExport={() => {}}
-          onFilter={() => {}}
           secondaryActions={
             <Button
               size="sm"
@@ -156,20 +157,27 @@ function DashboardPage() {
                 <CalendarClock className="h-3.5 w-3.5" aria-hidden="true" />
                 Today
               </Badge>
+              <Badge variant="outline" className="gap-1.5">
+                <FlaskConical className="h-3.5 w-3.5" aria-hidden="true" />
+                Demo data
+              </Badge>
               <span className="text-xs text-muted-foreground">
-                Signals refreshed continuously from the Aurumi platform.
+                Preview build — signals below are illustrative, not live platform data.
               </span>
             </div>
+
           }
         />
 
         {/* ─── 2. Executive Brief (Hero) ─────────────────────────────── */}
         <ExecutiveBrief
-          narrative="Overall business is trending healthy. Revenue accelerated with strong enterprise bookings, Hyderabad continues to outperform, and customer satisfaction is at a rolling high. A small number of approvals and one distribution issue need your attention today."
+          title="Today's Business Brief (Preview)"
+          narrative="Preview narrative built from demo data. In this scenario, business is trending healthy: revenue accelerated with strong enterprise bookings, Hyderabad continues to outperform, and customer satisfaction is at a rolling high. A small number of approvals and one distribution issue would need your attention today."
           highlights={BRIEF_HIGHLIGHTS}
           generatedAt={generatedAt}
           confidence="high"
         />
+
 
         {/* ─── 3. Suggested Questions ────────────────────────────────── */}
         <section
@@ -222,13 +230,11 @@ function DashboardPage() {
           </div>
           <div className="grid grid-cols-12 gap-4">
             <div className="col-span-12 lg:col-span-6">
-              <FocusTodayWidget
-                widget={FOCUS_WIDGET}
-                data={eccFocusToday}
-                headerActions={<WidgetActionMenu widgetTitle={FOCUS_WIDGET.title} />}
-              />
+              <RenderWidget widget={FOCUS_WIDGET as DashboardWidget} />
             </div>
           </div>
+
+
         </section>
 
         {/* ─── 5. Executive Dashboard (KPIs, overview, operations) ───── */}
