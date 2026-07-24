@@ -3,7 +3,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Building2, CalendarClock, FlaskConical, MessageSquare } from "lucide-react";
 import { DashboardRenderer } from "@/domains/dashboard/components/dashboard-renderer";
 import { DashboardToolbar } from "@/domains/dashboard/components/dashboard-toolbar";
-import { useDefaultDashboard } from "@/domains/dashboard/hooks/use-dashboard";
+import { useDashboard, useDefaultDashboard } from "@/domains/dashboard/hooks/use-dashboard";
+import { useCurrentEmployee } from "@/domains/identity";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -69,7 +70,17 @@ const BRIEF_HIGHLIGHTS: BriefHighlight[] = [
 
 
 function DashboardPage() {
-  const { data, isLoading, error, refetch, isFetching } = useDefaultDashboard();
+  const { currentEmployee } = useCurrentEmployee();
+  const preferredSlug = currentEmployee.defaultDashboardSlug ?? "";
+  const preferred = useDashboard(preferredSlug);
+  const fallback = useDefaultDashboard();
+  // Prefer the employee-specific dashboard when it resolves; otherwise
+  // fall through to the platform default so an unknown slug never breaks
+  // the workspace.
+  const usePreferred =
+    Boolean(preferredSlug) && (preferred.isLoading || Boolean(preferred.data));
+  const active = usePreferred ? preferred : fallback;
+  const { data, isLoading, error, refetch, isFetching } = active;
   const [open, setOpen] = useState(false);
   const generatedAt = useMemo(() => new Date().toISOString(), []);
 
