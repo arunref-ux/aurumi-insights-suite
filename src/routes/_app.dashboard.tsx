@@ -71,13 +71,16 @@ const BRIEF_HIGHLIGHTS: BriefHighlight[] = [
 
 function DashboardPage() {
   const { currentEmployee } = useCurrentEmployee();
-  const preferredSlug = currentEmployee.defaultDashboardSlug;
-  const preferred = useDashboard(preferredSlug ?? "");
+  const preferredSlug = currentEmployee.defaultDashboardSlug ?? "";
+  const preferred = useDashboard(preferredSlug);
   const fallback = useDefaultDashboard();
-  const { data, isLoading, error, refetch, isFetching } =
-    preferredSlug && (preferred.data || preferred.isLoading || preferred.error)
-      ? preferred
-      : fallback;
+  // Prefer the employee-specific dashboard when it resolves; otherwise
+  // fall through to the platform default so an unknown slug never breaks
+  // the workspace.
+  const usePreferred =
+    Boolean(preferredSlug) && (preferred.isLoading || Boolean(preferred.data));
+  const active = usePreferred ? preferred : fallback;
+  const { data, isLoading, error, refetch, isFetching } = active;
   const [open, setOpen] = useState(false);
   const generatedAt = useMemo(() => new Date().toISOString(), []);
 
