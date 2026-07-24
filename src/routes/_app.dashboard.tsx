@@ -171,11 +171,13 @@ function DashboardPage() {
 
         {/* ─── 2. Executive Brief (Hero) ─────────────────────────────── */}
         <ExecutiveBrief
-          narrative="Overall business is trending healthy. Revenue accelerated with strong enterprise bookings, Hyderabad continues to outperform, and customer satisfaction is at a rolling high. A small number of approvals and one distribution issue need your attention today."
+          title="Today's Business Brief (Preview)"
+          narrative="Preview narrative built from demo data. In this scenario, business is trending healthy: revenue accelerated with strong enterprise bookings, Hyderabad continues to outperform, and customer satisfaction is at a rolling high. A small number of approvals and one distribution issue would need your attention today."
           highlights={BRIEF_HIGHLIGHTS}
           generatedAt={generatedAt}
           confidence="high"
         />
+
 
         {/* ─── 3. Suggested Questions ────────────────────────────────── */}
         <section
