@@ -9,5 +9,4 @@ export * from "./timeline";
 export * from "./status-grid";
 export * from "./pending-actions";
 export * from "./focus-today";
-export { registerSdkWidgets } from "./register";
 export { WidgetActionMenu } from "./shared/widget-action-menu";
