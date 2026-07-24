@@ -157,10 +157,15 @@ function DashboardPage() {
                 <CalendarClock className="h-3.5 w-3.5" aria-hidden="true" />
                 Today
               </Badge>
+              <Badge variant="outline" className="gap-1.5">
+                <FlaskConical className="h-3.5 w-3.5" aria-hidden="true" />
+                Demo data
+              </Badge>
               <span className="text-xs text-muted-foreground">
-                Signals refreshed continuously from the Aurumi platform.
+                Preview build — signals below are illustrative, not live platform data.
               </span>
             </div>
+
           }
         />
 
@@ -223,9 +228,10 @@ function DashboardPage() {
           </div>
           <div className="grid grid-cols-12 gap-4">
             <div className="col-span-12 lg:col-span-6">
-              <RenderWidget widget={FOCUS_WIDGET} />
+              <RenderWidget widget={FOCUS_WIDGET as DashboardWidget} />
             </div>
           </div>
+
 
         </section>
 
