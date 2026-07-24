@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import type {
   Dashboard,
   DashboardRow,
@@ -6,9 +5,8 @@ import type {
   DashboardWidget,
 } from "../types";
 import { widgetRegistry } from "../registry/widget-registry";
-import { registerDefaultWidgets } from "../registry/register-defaults";
-import { registerSdkWidgets } from "../widgets/register";
-import { resolveMockData } from "../mock/data-resolver";
+import "../registry/bootstrap";
+import { useWidgetData } from "../hooks/use-widget-data";
 import { getWidgetColSpan } from "../layouts/grid";
 import { WidgetActionMenu } from "../widgets/shared/widget-action-menu";
 import { DashboardToolbar } from "./dashboard-toolbar";
@@ -23,8 +21,6 @@ export interface DashboardRendererProps {
   /** Optional override for the last-refreshed timestamp shown in the toolbar. */
   lastRefreshed?: string;
   onRefresh?: () => void;
-  onExport?: () => void;
-  onFilter?: () => void;
 }
 
 export function DashboardRenderer({
@@ -32,14 +28,7 @@ export function DashboardRenderer({
   showToolbar = true,
   lastRefreshed,
   onRefresh,
-  onExport,
-  onFilter,
 }: DashboardRendererProps) {
-  useMemo(() => {
-    registerDefaultWidgets();
-    registerSdkWidgets();
-  }, []);
-
   const refreshedAt =
     lastRefreshed ??
     (typeof dashboard.metadata?.updatedAt === "string"
@@ -54,8 +43,6 @@ export function DashboardRenderer({
           subtitle={dashboard.description}
           lastRefreshed={refreshedAt}
           onRefresh={onRefresh}
-          onExport={onExport}
-          onFilter={onFilter}
         />
       ) : null}
 
@@ -95,22 +82,29 @@ function RowRenderer({ row }: { row: DashboardRow }) {
   return (
     <div className="grid grid-cols-12 gap-4">
       {row.widgets.map((widget) => (
-        <WidgetSlot key={widget.id} widget={widget} />
+        <div key={widget.id} className={getWidgetColSpan(widget.size)}>
+          <RenderWidget widget={widget} />
+        </div>
       ))}
     </div>
   );
 }
 
-function WidgetSlot({ widget }: { widget: DashboardWidget }) {
+/**
+ * Renders a single widget via the same provider pipeline every other
+ * widget uses. Host pages that want to inline a widget outside a
+ * dashboard grid should use this component — not fixture imports.
+ */
+export function RenderWidget({ widget }: { widget: DashboardWidget }) {
   const Component = widgetRegistry.resolve(widget.type);
-  const data = resolveMockData(widget.dataSource);
+  const { data, isLoading, error } = useWidgetData(widget);
   return (
-    <div className={getWidgetColSpan(widget.size)}>
-      <Component
-        widget={widget}
-        data={data}
-        headerActions={<WidgetActionMenu widgetTitle={widget.title} />}
-      />
-    </div>
+    <Component
+      widget={widget}
+      data={data}
+      isLoading={isLoading}
+      error={error}
+      headerActions={<WidgetActionMenu widgetTitle={widget.title} />}
+    />
   );
 }

@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { DashboardService } from "../services/dashboard-service";
+import { useDashboardProvider } from "@/platform/context";
 
 export const dashboardKeys = {
   all: ["dashboards"] as const,
@@ -9,23 +9,26 @@ export const dashboardKeys = {
 };
 
 export function useDashboards() {
+  const provider = useDashboardProvider();
   return useQuery({
     queryKey: dashboardKeys.list(),
-    queryFn: () => DashboardService.getDashboards(),
+    queryFn: () => provider.list(),
   });
 }
 
 export function useDashboard(idOrSlug: string) {
+  const provider = useDashboardProvider();
   return useQuery({
     queryKey: dashboardKeys.detail(idOrSlug),
-    queryFn: () => DashboardService.getDashboard(idOrSlug),
+    queryFn: () => provider.get(idOrSlug),
     enabled: Boolean(idOrSlug),
   });
 }
 
 export function useDefaultDashboard() {
+  const provider = useDashboardProvider();
   return useQuery({
     queryKey: dashboardKeys.default(),
-    queryFn: () => DashboardService.getDefaultDashboard(),
+    queryFn: () => provider.getDefault(),
   });
 }
