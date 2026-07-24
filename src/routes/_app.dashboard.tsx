@@ -74,13 +74,15 @@ function DashboardPage() {
   const preferredSlug = currentEmployee.defaultDashboardSlug ?? "";
   const preferred = useDashboard(preferredSlug);
   const fallback = useDefaultDashboard();
-  // Prefer the employee-specific dashboard when it resolves; otherwise
-  // fall through to the platform default so an unknown slug never breaks
-  // the workspace.
-  const usePreferred =
-    Boolean(preferredSlug) && (preferred.isLoading || Boolean(preferred.data));
-  const active = usePreferred ? preferred : fallback;
-  const { data, isLoading, error, refetch, isFetching } = active;
+  // Prefer the employee-specific dashboard once it resolves; while it is
+  // loading (or if it resolves to null for an unknown slug) render the
+  // default dashboard so the workspace is never blank when switching roles.
+  const data = preferred.data ?? fallback.data ?? null;
+  const isLoading =
+    !data && (preferred.isLoading || fallback.isLoading);
+  const error = data ? null : (preferred.error ?? fallback.error);
+  const refetch = preferred.data ? preferred.refetch : fallback.refetch;
+  const isFetching = preferred.isFetching || fallback.isFetching;
   const [open, setOpen] = useState(false);
   const generatedAt = useMemo(() => new Date().toISOString(), []);
 
