@@ -1,5 +1,5 @@
 export * from "./types";
-export { ConversationService, DEFAULT_SUGGESTIONS, makeUserMessage } from "./service";
+export { makeUserMessage } from "./model/message-factory";
 export {
   ConversationPanel,
   ConversationHeader,

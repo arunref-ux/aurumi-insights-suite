@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
-import { makeUserMessage } from "../service";
+import { makeUserMessage } from "../model/message-factory";
 import { useConversationProvider } from "@/platform/context";
 import type {
   ConversationMessage,

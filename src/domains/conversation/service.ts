@@ -179,11 +179,3 @@ function buildReply(q: string, original: string): ConversationMessage {
   };
 }
 
-export function makeUserMessage(text: string): ConversationMessage {
-  return {
-    id: makeId(),
-    role: "user",
-    text,
-    timestamp: nowIso(),
-  };
-}
