@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Building2, CalendarClock, FlaskConical, MessageSquare } from "lucide-react";
 import { DashboardRenderer } from "@/domains/dashboard/components/dashboard-renderer";
@@ -87,6 +87,24 @@ function DashboardPage() {
   const generatedAt = useMemo(() => new Date().toISOString(), []);
 
   const openConversation = useCallback(() => setOpen(true), []);
+
+  // Safety net: the drawer is a modal overlay that locks page interaction
+  // while open. If it unmounts or closes mid-animation the lock can linger
+  // and make the rest of the app (e.g. sidebar links) unclickable.
+  useEffect(() => {
+    if (open) return;
+    const restore = () => {
+      document.body.style.pointerEvents = "";
+      document.body.removeAttribute("data-scroll-locked");
+    };
+    restore();
+    const t = window.setTimeout(restore, 350);
+    return () => {
+      window.clearTimeout(t);
+      restore();
+    };
+  }, [open]);
+
   const handleOpenReference = useCallback((_widgetId: string, _label: string) => {
     // Reference navigation is intentionally lightweight for this milestone:
     // close the drawer to reveal the underlying dashboard. Scrolling and
