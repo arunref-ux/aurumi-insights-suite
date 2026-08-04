@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Building2, CalendarClock, FlaskConical, MessageSquare } from "lucide-react";
 import { DashboardRenderer } from "@/domains/dashboard/components/dashboard-renderer";
