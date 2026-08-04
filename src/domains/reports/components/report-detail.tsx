@@ -1,11 +1,28 @@
-import { Clock, Download, Filter, Play, Share2, Star, User } from "lucide-react";
+import {
+  Clock,
+  Download,
+  FileText,
+  Filter,
+  LayoutDashboard,
+  Play,
+  Share2,
+  Star,
+  Table2,
+  User,
+} from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import type { ReportApp, ReportItem, ReportStatus } from "../types";
-import { formatIcons } from "./report-tree";
+import type { ReportApp, ReportFormat, ReportItem, ReportStatus } from "../types";
+
+const formatIcons: Record<ReportFormat, typeof FileText> = {
+  dashboard: LayoutDashboard,
+  table: Table2,
+  document: FileText,
+  export: Download,
+};
 
 const statusVariant: Record<ReportStatus, string> = {
   live: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
