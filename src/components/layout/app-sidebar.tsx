@@ -14,6 +14,8 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { NAV_ITEMS } from "@/app/navigation";
+import { ReportsNavTree } from "@/components/layout/reports-nav-tree";
+
 
 const iconMap = {
   dashboard: LayoutDashboard,
@@ -59,9 +61,13 @@ export function AppSidebar() {
                         <span>{item.label}</span>
                       </Link>
                     </SidebarMenuButton>
+                    {item.key === "reports" && pathname === "/reports" ? (
+                      <ReportsNavTree />
+                    ) : null}
                   </SidebarMenuItem>
                 );
               })}
+
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
