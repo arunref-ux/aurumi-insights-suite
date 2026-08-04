@@ -323,9 +323,6 @@ export const eccFocusToday: FocusTodayWidgetData = {
 
 
 
-import type { KpiWidgetData, TrendKpiWidgetData } from "../widgets/kpi/types";
-import type { ListWidgetData } from "../widgets/list/types";
-import type { TableWidgetData } from "../widgets/table/types";
 
 // --- SALES MANAGER MOCK DATA ---
 export const salesKpiPipeline: TrendKpiWidgetData = {
